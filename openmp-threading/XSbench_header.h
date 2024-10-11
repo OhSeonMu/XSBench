@@ -77,6 +77,8 @@ typedef struct{
 	int simulation_method;
 	int binary_mode;
 	int kernel_id;
+	//Modification by osm
+	int port;
 } Inputs;
 
 typedef struct{

@@ -1,8 +1,10 @@
 #include "XSbench_header.h"
 
+/*
 #ifdef MPI
 #include<mpi.h>
 #endif
+*/
 
 int main( int argc, char* argv[] )
 {
@@ -31,6 +33,8 @@ int main( int argc, char* argv[] )
 	#ifdef AML
 	aml_init(&argc, &argv);
 	#endif
+
+	setvbuf(stdout, NULL, _IOLBF, 0);
 
 	// Process CLI Fields -- store in "Inputs" structure
 	Inputs in = read_CLI( argc, argv );
@@ -72,6 +76,9 @@ int main( int argc, char* argv[] )
 	// lookup kernel.
 	// =====================================================================
 
+	// get port
+	port = in.port;	
+
 	// Create Socket
 	if((socket_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
 		perror("Socket create error\n");
@@ -94,6 +101,7 @@ int main( int argc, char* argv[] )
 		return -1;
 	}
 
+	
 	if( mype == 0 )
 	{
 		printf("\n");
@@ -102,6 +110,8 @@ int main( int argc, char* argv[] )
 		border_print();
 	}
 	
+	
+	printf("BUILD END\n");
 	while(1) {
 		// Accept Client
 		if((new_socket = accept(socket_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen)) < 0) {
@@ -153,6 +163,8 @@ int main( int argc, char* argv[] )
 
 		// Print / Save Results and Exit
 		is_invalid_result = print_results( in, mype, omp_end-omp_start, nprocs, verification );
+		
+		send(new_socket, buffer, strlen(buffer), 0); 
 		if(stop == 0)
 			continue;
 		if(stop == 1)

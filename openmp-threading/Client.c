@@ -7,7 +7,8 @@
 int main(int argc, char const *argv[]) {
 	int sock;
 	struct sockaddr_in server_addr;
-	
+	char buffer[1024] = {0};
+
 	if(argc < 4) {
 		perror("usage: ./client <stop> <ip> <port>\n");
 		return -1;
@@ -15,7 +16,7 @@ int main(int argc, char const *argv[]) {
 	
 	const char* stop 	= argv[1];
 	const char* ip 		= "127.0.0.1";
-	int port 		= 24;
+	int port 		= atoi(argv[3]);
 	
 	// Create Socket	
 	if((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -39,6 +40,7 @@ int main(int argc, char const *argv[]) {
 	}
 
 	send(sock, stop, strlen(stop), 0);
+	read(sock, buffer, 1024);
 
 	close(sock);
 

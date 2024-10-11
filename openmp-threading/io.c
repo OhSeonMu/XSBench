@@ -290,6 +290,15 @@ Inputs read_CLI( int argc, char * argv[] )
 			else
 				print_CLI_error();
 		}
+		// Modification by osm : to get port 
+		// port number (-P)
+		else if( strcmp(arg, "-P") == 0 )
+		{
+			if( ++i < argc )
+				input.port = atoi(argv[i]);
+			else
+				print_CLI_error();
+		}
 		// n_gridpoints (-g)
 		else if( strcmp(arg, "-g") == 0 )
 		{	
